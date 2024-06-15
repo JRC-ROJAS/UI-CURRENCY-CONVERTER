@@ -4,55 +4,52 @@ import {
   Container,
   TextField,
   MenuItem,
-  Select,
   Button,
   Typography,
-  FormControl,
-  InputLabel,
   Box,
+  Grid,
   Snackbar,
-  Card,
-  CardContent
+  Paper
 } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
+import { Clear, SwapHoriz } from '@mui/icons-material';
 
 // Lista de opciones de monedas del continente americano
 const currencyOptions = [
-  { code: 'ARS', name: 'Peso Argentino' },
-  { code: 'BOB', name: 'Boliviano' },
-  { code: 'BRL', name: 'Real' },
-  { code: 'CAD', name: 'Dólar Canadiense' },
-  { code: 'CLP', name: 'Peso Chileno' },
-  { code: 'COP', name: 'Peso Colombiano' },
-  { code: 'CRC', name: 'Colón Costarricense' },
-  { code: 'CUP', name: 'Peso Cubano' },
-  { code: 'DOP', name: 'Peso Dominicano' },
-  { code: 'GTQ', name: 'Quetzal Guatemalteco' },
-  { code: 'GYD', name: 'Dólar Guyanés' },
-  { code: 'HNL', name: 'Lempira Hondureño' },
-  { code: 'JMD', name: 'Dólar Jamaiquino' },
-  { code: 'MXN', name: 'Peso Mexicano' },
-  { code: 'NIO', name: 'Córdoba Nicaragüense' },
-  { code: 'PAB', name: 'Balboa Panameño' },
-  { code: 'PYG', name: 'Guaraní Paraguayo' },
-  { code: 'PEN', name: 'Sol Peruano' },
-  { code: 'SRD', name: 'Dólar Surinamés' },
-  { code: 'TTD', name: 'Dólar de Trinidad y Tobago' },
-  { code: 'USD', name: 'Dólar Estadounidense' },
-  { code: 'UYU', name: 'Peso Uruguayo' },
-  { code: 'VES', name: 'Bolívar Venezolano' }
-];
-
+    { code: 'ARS', name: 'Peso Argentino', symbol: '$' },
+    { code: 'BOB', name: 'Boliviano', symbol: 'Bs.' },
+    { code: 'BRL', name: 'Real', symbol: 'R$' },
+    { code: 'CAD', name: 'Dólar Canadiense', symbol: 'CA$' },
+    { code: 'CLP', name: 'Peso Chileno', symbol: '$' },
+    { code: 'COP', name: 'Peso Colombiano', symbol: '$' },
+    { code: 'CRC', name: 'Colón Costarricense', symbol: '₡' },
+    { code: 'CUP', name: 'Peso Cubano', symbol: '$' },
+    { code: 'DOP', name: 'Peso Dominicano', symbol: 'RD$' },
+    { code: 'GTQ', name: 'Quetzal Guatemalteco', symbol: 'Q' },
+    { code: 'GYD', name: 'Dólar Guyanés', symbol: 'G$' },
+    { code: 'HNL', name: 'Lempira Hondureño', symbol: 'L' },
+    { code: 'JMD', name: 'Dólar Jamaiquino', symbol: 'J$' },
+    { code: 'MXN', name: 'Peso Mexicano', symbol: '$' },
+    { code: 'NIO', name: 'Córdoba Nicaragüense', symbol: 'C$' },
+    { code: 'PAB', name: 'Balboa Panameño', symbol: 'B/.' },
+    { code: 'PYG', name: 'Guaraní Paraguayo', symbol: '₲' },
+    { code: 'PEN', name: 'Sol Peruano', symbol: 'S/.' },
+    { code: 'SRD', name: 'Dólar Surinamés', symbol: '$' },
+    { code: 'TTD', name: 'Dólar de Trinidad y Tobago', symbol: 'TT$' },
+    { code: 'USD', name: 'Dólar Estadounidense', symbol: '$' },
+    { code: 'UYU', name: 'Peso Uruguayo', symbol: '$U' },
+    { code: 'VES', name: 'Bolívar Venezolano', symbol: 'Bs.' }
+  ];
+  
 const CurrencyConverter = () => {
   const [amount, setAmount] = useState('');
   const [fromCurrency, setFromCurrency] = useState('BOB');
   const [toCurrency, setToCurrency] = useState('USD');
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState('');
   const [error, setError] = useState(null);
 
   const handleConvert = () => {
     const apiUrl = `https://v6.exchangerate-api.com/v6/370f38d2a28ae6bc75bae014/latest/${fromCurrency}`;
-    
     axios
       .get(apiUrl)
       .then(response => {
@@ -72,65 +69,107 @@ const CurrencyConverter = () => {
       });
   };
 
+  const handleClear = () => {
+    setAmount('');
+    setFromCurrency('BOB');
+    setToCurrency('USD');
+    setResult('');
+  };
+
   const handleCloseError = () => {
     setError(null);
   };
 
+  const getCurrencySymbol = (code) => {
+    const currency = currencyOptions.find(option => option.code === code);
+    return currency ? currency.symbol : '';
+  };
+
   return (
-    <Container>
+    <Container maxWidth="lg">
       <Box mt={4}>
-        <FormControl fullWidth margin="normal">
-          <InputLabel>From Currency</InputLabel>
-          <Select
-            value={fromCurrency}
-            onChange={(e) => setFromCurrency(e.target.value)}
-            label="From Currency"
-          >
-            {currencyOptions.map((option) => (
-              <MenuItem key={option.code} value={option.code}>
-                {option.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        
-        <TextField
-          label="Amount"
-          type="number"
-          fullWidth
-          margin="normal"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-        />
+        <Typography variant="h4" align="center" gutterBottom>
+        Conversor de Monedas Americanas
+        </Typography>
+        <Grid container spacing={2} justifyContent="center">
+          <Grid item xs={12} md={6}>
+            <Paper elevation={2} style={{ padding: '20px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' }}>
+              <TextField
+                select
+                label="De"
+                fullWidth
+                size='small'
+                margin="normal"
+                value={fromCurrency}
+                onChange={(e) => setFromCurrency(e.target.value)}
+              >
+                {currencyOptions.map((option) => (
+                  <MenuItem key={option.code} value={option.code}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </TextField>
 
-        <FormControl fullWidth margin="normal">
-          <InputLabel>To Currency</InputLabel>
-          <Select
-            value={toCurrency}
-            onChange={(e) => setToCurrency(e.target.value)}
-            label="To Currency"
-          >
-            {currencyOptions.map((option) => (
-              <MenuItem key={option.code} value={option.code}>
-                {option.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+              <TextField
+                select
+                label="Para"
+                fullWidth
+                size='small'
+                margin="normal"
+                value={toCurrency}
+                onChange={(e) => setToCurrency(e.target.value)}
+              >
+                {currencyOptions.map((option) => (
+                  <MenuItem key={option.code} value={option.code}>
+                    {option.name}
+                  </MenuItem>
+                ))}
+              </TextField>
+              
+              <TextField
+                label="Monto"
+                type="number"
+                fullWidth
+                size='small'
+                margin="normal"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
 
-        <Button variant="contained" color="primary" onClick={handleConvert} fullWidth>
-          Convert
-        </Button>
+              <Box mt={2} >
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleConvert}
+                  startIcon={<SwapHoriz />}
+                  fullWidth
+                >
+                  Convertir
+                </Button>
+              </Box>
+              
+              <Box mt={2} >
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={handleClear}
+                  startIcon={<Clear />}
+                  fullWidth
+                >
+                  Limpiar
+                </Button>
+              </Box>
+            </Paper>
+          </Grid>
 
-        {result && (
-          <Card variant="outlined" style={{ backgroundColor: '#e8f5e9', marginTop: '20px' }}>
-            <CardContent>
-              <Typography variant="h6" align="center" margin="normal">
-                Result: {result} {toCurrency}
+          <Grid item xs={12} md={6}>
+            <Paper elevation={3} style={{ backgroundColor: '#e8f5e9', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Typography variant="h3" align="center">
+                 {result ? `${getCurrencySymbol(toCurrency)} ${result}` : '?'}
               </Typography>
-            </CardContent>
-          </Card>
-        )}
+            </Paper>
+          </Grid>
+        </Grid>
 
         <Snackbar open={error !== null} autoHideDuration={6000} onClose={handleCloseError}>
           <MuiAlert elevation={6} variant="filled" severity="error" onClose={handleCloseError}>
