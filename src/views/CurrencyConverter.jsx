@@ -92,7 +92,7 @@ const CurrencyConverter = () => {
         Conversor de Monedas Americanas
         </Typography>
         <Grid container spacing={2} justifyContent="center">
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={4}>
             <Paper elevation={2} style={{ padding: '20px', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' }}>
               <TextField
                 select
@@ -162,9 +162,9 @@ const CurrencyConverter = () => {
             </Paper>
           </Grid>
 
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} md={8}>
             <Paper elevation={3} style={{ backgroundColor: '#e8f5e9', boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <Typography variant="h3" align="center">
+              <Typography variant="h2" align="center">
                  {result ? `${getCurrencySymbol(toCurrency)} ${result}` : '?'}
               </Typography>
             </Paper>
